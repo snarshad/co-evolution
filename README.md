@@ -15,8 +15,7 @@ The art itself works in any modern browser. The listening and answering features
 To get the full experience you need:
 
 - **Chrome 148 or newer** on a desktop or laptop: Windows 10 or 11, macOS 13 or later, Linux, or a Chromebook Plus. Phones are not supported.
-- **At least 22 GB of free disk space.** The model itself is only about 2.7 to 4 GB, but Chrome won't download it unless 22 GB is free on the drive that holds your Chrome profile, and removes it again if free space drops below about 10 GB.
-- **A graphics card with more than 4 GB of memory**, or 16 GB of RAM and at least 4 processor cores.
+- For the interactive AI, **[Chrome's local model, Gemini Nano](https://developer.chrome.com/docs/ai/get-started)** installed.
 
 The first time, Chrome downloads the model (a few gigabytes). The page starts that download as soon as it can; if Chrome wants a click first, click anywhere on the art. A small dot next to the ear button shows the model's state:
 
