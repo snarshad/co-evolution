@@ -1287,16 +1287,22 @@ These terms belong to the group's shared language. Hold them as open, living ide
     if (on) startDrone(); else stopDrone();
     showSoundState();
   }
-  soundBtn.addEventListener('click', () => setSound(mode !== 'on'));
+  // A first click on the speaker while sound is still held back just starts it (see primeSound).
+  let keepSoundOnce = false;
+  soundBtn.addEventListener('click', () => {
+    if (keepSoundOnce) { keepSoundOnce = false; return; }
+    setSound(mode !== 'on');
+  });
   // Sound is on by default. Browsers only allow a page to make sound after someone interacts with it,
   // so the speaker shows as on, and the water and notes begin with the first click, tap or key press.
-  // (A first click on the speaker itself starts the sound and then turns it off, as it appears to.)
   mode = 'on'; showSoundState();
   let soundPrimed = false;
   function primeSound(e) {
     if (!e.isTrusted || soundPrimed) return;
     soundPrimed = true;
     soundBtn.classList.remove('waiting');
+    // If that first interaction is on the speaker itself, it starts the sound rather than turning it off.
+    if (mode === 'on' && soundBtn.contains(e.target)) keepSoundOnce = true;
     window.removeEventListener('pointerdown', primeSound, true);
     window.removeEventListener('keydown', primeSound, true);
     if (mode === 'on') { setSound(true); dbg('page', 'sound started with the first interaction'); }
