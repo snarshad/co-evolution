@@ -91,6 +91,10 @@ button:focus-visible { outline: 2px solid var(--dig); outline-offset: 2px; }
 .sound[data-mode="on"] { border-color: var(--dig); color: var(--dig); }
 .sound[data-mode="on"] .waves { display: inline; }
 .sound[data-mode="on"] .mute { display: none; }
+/* Sound is on but the browser is holding it until the first click: the speaker pulses gently. */
+.sound.waiting { animation: soundwait 1.6s ease-in-out infinite; }
+@keyframes soundwait { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--dig) 28%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .sound.waiting { animation: none; } }
 .rdb[data-mode="on"] { border-color: var(--ink); background: color-mix(in srgb, var(--ink) 9%, transparent); }
 .dbg[data-mode="on"] { border-color: var(--ink); background: color-mix(in srgb, var(--ink) 9%, transparent); }
 .debug {
@@ -1292,10 +1296,31 @@ These terms belong to the group's shared language. Hold them as open, living ide
   function primeSound(e) {
     if (!e.isTrusted || soundPrimed) return;
     soundPrimed = true;
+    soundBtn.classList.remove('waiting');
     window.removeEventListener('pointerdown', primeSound, true);
     window.removeEventListener('keydown', primeSound, true);
     if (mode === 'on') { setSound(true); dbg('page', 'sound started with the first interaction'); }
   }
+  // Try to start right away. Chrome allows this on sites where you often play sound, and in kiosk
+  // mode; otherwise the browser holds the sound until the first click, and the speaker pulses gently.
+  (async () => {
+    try {
+      initAudio();
+      if (!actx) return;
+      await Promise.race([actx.resume(), new Promise(r => setTimeout(r, 400))]);
+      if (actx.state === 'running' && mode === 'on' && !soundPrimed) {
+        soundPrimed = true;
+        window.removeEventListener('pointerdown', primeSound, true);
+        window.removeEventListener('keydown', primeSound, true);
+        setSound(true);
+        dbg('page', 'sound started on its own: the browser allowed autoplay');
+      } else if (!soundPrimed) {
+        soundBtn.classList.add('waiting');
+        soundBtn.title = 'Sound is on and will start with your first click';
+        dbg('page', 'the browser is holding sound until the first click or key press');
+      }
+    } catch (e) {}
+  })();
   window.addEventListener('pointerdown', primeSound, true);
   window.addEventListener('keydown', primeSound, true);
   // ---------- Listening ----------
