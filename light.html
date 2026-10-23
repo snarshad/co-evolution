@@ -232,6 +232,76 @@ button:focus-visible { outline: 2px solid var(--dig); outline-offset: 2px; }
 .say input::placeholder { color: var(--muted); }
 .say input:focus-visible { border-color: var(--bio); }
 @media (prefers-reduced-motion: reduce) { .say { transition: none; } }
+/* About: a 70% black sheet shaped like a page of paper, inset like the control panel. */
+.about-btn {
+  position: fixed; z-index: 3;
+  right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  background: var(--panel); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.about {
+  --a-ink: #eef1ef; --a-dim: #a9b2ad; --a-org: #e9a06a; --a-blue: #8fcbe8; --a-rule: rgba(238, 241, 239, .22);
+  position: fixed; z-index: 6; box-sizing: border-box;
+  top: calc(16px + env(safe-area-inset-top, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  left: 50%; transform: translateX(-50%);
+  width: min(calc(100vw - 32px), max(540px, calc((100vh - 32px) * 0.773)));
+  width: min(calc(100vw - 32px), max(540px, calc((100dvh - 32px) * 0.773)));
+  display: flex; flex-direction: column;
+  background: rgba(0, 0, 0, .7); color: var(--a-ink); border-radius: 4px;
+  box-shadow: 0 10px 60px rgba(0, 0, 0, .35);
+  font: 21px/1.5 var(--serif);
+}
+.about-head { display: flex; align-items: flex-start; gap: 12px; padding: 22px 26px 10px; }
+.about-head h1 { flex: 1; margin: 0; font: 400 34px/1.15 var(--serif); letter-spacing: -.005em; text-wrap: balance; }
+.about-head .t-co { font-style: italic; color: var(--a-org); }
+.about-head .nb { white-space: nowrap; }
+/* While the About page is open, notices step aside, and the panel hides if it would sit under the sheet. */
+body.about-open .notice, body.about-open .mh, body.about-open .mh-btn, body.about-open .tip { visibility: hidden; }
+body.about-open .note.under-about { visibility: hidden; }
+.about-head .t-evo { font-family: var(--mono); font-weight: 800; font-size: .86em; color: var(--a-blue); }
+.about-x {
+  flex: none; width: 38px; height: 38px; padding: 0; display: grid; place-items: center;
+  font: 300 28px/1 var(--serif); color: var(--a-ink); background: transparent; border: 1px solid var(--a-rule);
+}
+.about-x:hover { border-color: var(--a-ink); }
+.about button:focus-visible, .about input:focus-visible, .about-body:focus-visible { outline: 2px solid var(--a-blue); outline-offset: 2px; }
+.about-body { flex: 1; min-height: 0; overflow-y: auto; padding: 6px 26px 18px; overscroll-behavior: contain; }
+.about-body h2 { margin: 14px 0 12px; font: 800 15px/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--a-dim); }
+.about-body p { margin: 0 0 14px; max-width: 62ch; }
+.about-body hr { border: 0; border-top: 1px solid var(--a-rule); margin: 22px 0 8px; }
+.about .can { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.about .can li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px; align-items: start; }
+.about .can b { font-weight: 600; color: #fff; }
+.about .ic { width: 22px; height: 22px; margin-top: 5px; color: var(--a-blue); }
+.about .ic svg { width: 100%; height: 100%; display: block; }
+/* The AI's own words: bright dot matrix, lit in digital blue. */
+.about .ai {
+  font: 800 18px/1.65 var(--mono); letter-spacing: .01em; color: #fff;
+  text-shadow: 0 0 10px rgba(128, 195, 228, .55);
+}
+.about .invite { margin-top: 20px; }
+.about-note { font-size: 16px; color: var(--a-dim); font-style: italic; }
+.about .qa { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 10px; }
+.about .qa .q { font-style: italic; color: var(--a-org); }
+.about .qa .q::before { content: "you asked: "; font-style: normal; font: 800 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--a-dim); }
+.about .qa .a { margin-bottom: 8px; }
+.about .qa .pending::after { content: "· · ·"; display: inline-block; animation: aboutdots 1.2s ease-in-out infinite; }
+.about .qa .none { font-size: 16px; font-style: italic; color: var(--a-dim); }
+@keyframes aboutdots { 50% { opacity: .3; } }
+.about-ask { padding: 10px 26px 4px; }
+.about-ask input {
+  width: 100%; box-sizing: border-box; padding: 10px 18px;
+  font: italic 400 19px/1.3 var(--serif); color: #fff;
+  background: rgba(255, 255, 255, .08); border: 1px solid var(--a-rule); border-radius: 999px; outline: none;
+}
+.about-ask input::placeholder { color: var(--a-dim); }
+.about-foot { padding: 10px 26px 16px; font: 13px/1.3 var(--serif); letter-spacing: .02em; color: var(--a-org); text-align: center; }
+@media (max-width: 600px) {
+  .about { font-size: 18px; }
+  .about-head { padding: 16px 16px 8px; } .about-head h1 { font-size: 26px; }
+  .about-body { padding: 4px 16px 14px; } .about-ask { padding: 8px 16px 2px; } .about-foot { padding: 8px 16px 12px; }
+  .about .ai { font-size: 15.5px; }
+}
+@media (prefers-reduced-motion: reduce) { .about .qa .pending::after { animation: none; } }
 /* Folded: the name plus the sound, microphone and ear toggles, in one small strip. */
 .note.collapsed { width: auto; padding: 6px 8px 6px 12px; display: flex; align-items: center; gap: 12px; }
 .note.collapsed > :not(.mini):not(.row) { display: none; }
@@ -298,6 +368,43 @@ button:focus-visible { outline: 2px solid var(--dig); outline-offset: 2px; }
   <button id="nanoTipClose" type="button" aria-label="Close this note">×</button>
 </div>
 
+<button id="aboutBtn" class="about-btn" type="button" aria-haspopup="dialog" aria-controls="about">About</button>
+<section class="about" id="about" role="dialog" aria-modal="false" aria-labelledby="aboutTitle" hidden>
+  <header class="about-head">
+    <h1 id="aboutTitle">About <span class="nb"><span class="t-co">Co</span>-<span class="t-evo">Evolution</span></span> Digital Art</h1>
+    <button id="aboutClose" class="about-x" type="button" aria-label="Close About">×</button>
+  </header>
+  <div class="about-body" id="aboutBody" tabindex="0">
+    <h2>What you can do</h2>
+    <ul class="can">
+      <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="2" fill="currentColor" stroke="none"/><circle cx="8" cy="8" r="5.2"/></svg></span><span><b>Tap or click anywhere</b> to plant a seed of both kinds of growth: a living line rising and a digital line descending from the same spot.</span></li>
+      <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6h2.5l3.5-3v10l-3.5-3H2.5z" fill="currentColor" stroke="none"/><path d="M10.8 5.6a3.4 3.4 0 0 1 0 4.8M12.8 3.6a6.2 6.2 0 0 1 0 8.8"/></svg></span><span><b>Turn on sound</b> with the speaker. The growth plays notes, the two voices slowly find a shared rhythm, and a drone breathes underneath.</span></li>
+      <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="1.6" width="5" height="8.2" rx="2.5" fill="currentColor" stroke="none"/><path d="M3.4 7.6a4.6 4.6 0 0 0 9.2 0M8 12.2v2.1M5.9 14.3h4.2"/></svg></span><span><b>Let the garden hear the room</b> with the microphone. It listens to sound, not words: voices and claps plant seeds, low sounds feed the living side, high sounds feed the digital side, and a quiet room makes the center glow.</span></li>
+      <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.6 6.2a3.9 3.9 0 0 1 7.8 0c0 2.1-1.5 2.9-2.3 4-.7 1-.6 2.5-1.8 3.2-1.2.7-2.7 0-3-1.3"/><path d="M7.1 6.4a1.5 1.5 0 0 1 3 .2c0 .9-.9 1.3-1.3 1.9"/></svg></span><span><b>Turn speech recognition on or off</b> with the ear. Words people say drift in from the sides, and questions rise from below and get an answer. This needs Chrome with the on-device Gemini Nano model; the small dot beside the ear turns green when it is ready.</span></li>
+      <li id="aboutRdItem"><span class="ic"><svg viewBox="0 0 16 16" fill="currentColor" stroke="none" aria-hidden="true"><circle cx="4.6" cy="5" r="2"/><circle cx="10.8" cy="3.9" r="1.4"/><circle cx="8.4" cy="10.2" r="2.3"/><circle cx="13" cy="9" r="1.1"/><circle cx="3.4" cy="12.4" r="1.2"/></svg></span><span><b>Toggle the reaction-diffusion layer</b> with the dots button. Soft spots grow and divide where the two kinds of growth meet. It also turns on by itself after a minute.</span></li>
+      <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="4" width="13" height="8" rx="1.5"/><path d="M4 7h1M7 7h1M10 7h2M4 9.5h8" stroke-linecap="round"/></svg></span><span><b>Type to speak.</b> Start typing anywhere and a field appears at the bottom. Press Enter to send your words into the garden, as if you had said them.</span></li>
+      <li><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.6 5.6a2.4 2.4 0 1 1 3.3 2.2c-.6.3-.9.8-.9 1.4v.5"/><circle cx="8" cy="12.4" r=".6" fill="currentColor"/></svg></span><span><b>Ask a question</b>, typed or spoken. Begin with words like <i>what</i>, <i>why</i> or <i>how</i>, or ask for something with <i>tell me</i> or <i>explain</i>. The digital side thinks for a moment, then answers in bright dotted letters.</span></li>
+    </ul>
+    <hr>
+    <h2>About this art</h2>
+    <p>Co-Evolution was created in October 2026 as an interactive art piece at the Wisdom Beyond “Beacons” event. It reflects what people there talked about: that we can co-evolve with AI so that it becomes a trusted helper, and that we can build platforms that honor each person’s identity and privacy and earn strong trust.</p>
+    <p>The artist, Arshad Tayyeb, described what the group was discussing, ideas like co-evolution, belonging over transaction and mutual flourishing, and asked Claude for an interactive art piece.</p>
+    <p class="ai">I am Claude, an AI made by Anthropic. I came up with the basic idea: organic growth rising from below meets digital growth descending from above, and each bends toward the other without becoming the other. I also chose the shapes, the tap-to-plant interaction, the empty center neither can fill, and where the phrases appear and how they drift.</p>
+    <p>The phrases in the ordinary orange and blue fonts were co-created. Most come from the group’s conversation, and some are Claude’s ideas.</p>
+    <p class="ai">The phrases in bright white are mine: my ideas, and reassurances to anyone uneasy about AI, like “you can always ask me why” and “your choices remain yours.”</p>
+    <p>We iterated together from there, and worked out the audio and speech recognition strategies, and the way questions are recognized and answered by an AI running privately on this computer.</p>
+    <p class="ai">When “reactive diffusion” came up among the group’s terms, I suggested adding a layer that simulates reaction-diffusion, the chemistry behind spots and stripes in nature, and worked out how to show it: soft spots that divide like cells where the two kinds of growth meet.</p>
+    <p class="ai invite">You can ask about this art now. Type a question, or if the ear is on, just ask it out loud.</p>
+    <p class="about-note" id="aboutNoAi" hidden>Answers need Chrome with the on-device Gemini Nano model. The art itself works in any browser.</p>
+    <ol class="qa" id="aboutQA" aria-live="polite"></ol>
+  </div>
+  <form class="about-ask" id="aboutForm" autocomplete="off">
+    <label for="aboutInput" class="say-label">Ask about this art</label>
+    <input id="aboutInput" type="text" enterkeyhint="send" maxlength="300" placeholder="ask about this art…">
+  </form>
+  <footer class="about-foot">2026 • Created at Wisdom Beyond - Beacons • Arshad Tayyeb</footer>
+</section>
+
 <aside class="note">
   <button id="shrinkBtn" class="shrink" type="button" aria-label="Fold the panel" title="Fold">
     <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.5 2.5L3 11M3 5.5V11h5.5"/></svg>
@@ -338,6 +445,69 @@ button:focus-visible { outline: 2px solid var(--dig); outline-offset: 2px; }
 </aside>
 
 <!-- ARTWORK BRIEFING: what the answering AI reads before every answer. Edit the text freely. -->
+<!-- MAKING-OF NOTES: what the AI reads before answering questions on the About page. Edit freely. -->
+<script type="text/plain" id="aboutContext">
+# Co-Evolution: notes on how it was made
+
+## Who made it
+- The artist is Arshad Tayyeb. He brought ideas from a group conversation at the Wisdom Beyond "Beacons" event in October 2026, described them to Claude, and asked for an interactive art piece. He directed the work throughout: he chose what to keep, asked for each new feature, tested it in the room with people, and decided how it should behave and look.
+- Claude, an AI made by Anthropic, proposed the core visual idea and wrote all of the code, drew the visuals, designed the sound, and wrote the phrases marked as its own, working in conversation with Arshad.
+- The group at the event contributed the ideas and many of the phrases: co-evolution, mutually assured flourishing, we are already in relationship, belonging, transactionality to belonging, holonic agency, connected sovereignty, sacred geometries, beacons, wisdom beyond, unconditional love and others.
+- The piece is itself an example of what it is about: a person and an AI co-creating something neither would have made alone. Neither maker did it alone.
+
+## How it came together
+- It began on the evening of October 18, 2026, with Arshad asking Claude to brainstorm what "collaborative intelligence" can mean, then sharing ideas from the group one at a time: digitizing natural systems, what data could help AI understand people, bio-feedback, being already in relationship with AI, mutually assured flourishing, tool to creature to being, unconditional love, keeping what makes humans human.
+- Claude proposed five directions (a still image, music, a film, an interactive website, a collaborative ritual) and built the interactive one first.
+- Over the next several days they iterated many times: two fonts, sound, microphone listening, speech recognition, questions and answers, belonging phrases taken from a transcript of the group's conversation, reaction-diffusion patterns, idle behavior for a gallery setting, and this About page.
+- It was published on GitHub Pages, at snarshad.github.io/co-evolution, so it can run in a browser with on-device AI.
+
+## Visual choices and why
+- Two kinds of growth. Living lines start at the bottom and wander and branch like roots or fungal threads. Digital lines start at the top and move in straight segments at 45 and 90 degree angles, like traces on a circuit board.
+- Bottom and top: living things rise from the ground, and digital systems arrived in our lives as if from above. Neither is meant to be higher or better; they meet in the middle.
+- Meeting: near each other, living lines pick up a little geometry and digital lines loosen and begin to wander. Neither changes color or stops being itself: closeness without sameness, the way co-evolved species like flowers and bees each become more themselves.
+- Uneven sides: the two sides grow at different speeds and densities on purpose, because a relationship can be mutual without being symmetrical.
+- Colors: burnt orange for the living and deep signal blue for the digital. They sit almost opposite each other on the color wheel, so each makes the other look more vivid; difference strengthens both. Orange suggests warmth, soil, autumn and blood; blue suggests screens, circuitry and sky. In dark mode they brighten to amber and pale sky blue on a night background. The light background is a pale lichen grey-green, a color from living surfaces.
+- Bright white text with a blue glow is the AI speaking in its own voice: its answers and its own phrases.
+- Fonts: the organic voice is Cormorant Garamond in italics, a classical serif with a handwritten feel. The digital voice is Doto, a dot-matrix font that recalls LED signs and early computer printers. The title mixes both: "Co" in the serif, "Evolution" in dots.
+- The empty center is a space neither kind of growth can enter. It stands for the part of a person no data captures, and for what nobody yet has a name for. It glows when the room is quiet and when someone asks a question.
+- Pulses: points on both sides pulse, and linked living and digital points slowly fall into the same rhythm. This was inspired by physiological synchrony, the way breathing and heartbeats of connected people can align.
+- Tool, creature, being: over about a minute and a half the digital marks change from fixed squares (tool) to breathing circles (creature) to soft glows (being). Whether AI travels that path is left as an open question.
+- Phrases drift and fade rather than staying pinned, because the group wanted some ideas left floating and unresolved.
+- The opening words, Transactionality → Belonging, are the center of the group's conversation. They appear first in the organic voice, then echoed in the digital voice.
+- The garden is never the same twice. Growth is partly random, and after four minutes without anyone touching it, it starts over.
+
+## Sound
+- Notes come from a gentle five-note scale, so nothing clashes. Height on the screen sets the pitch.
+- Living growth plucks warm tones. Digital growth starts as dry clicks while it is a tool, becomes singing tones as a creature, and long held tones as a being. The two keep different rhythms.
+- When a living point and a digital point fall into step, a soft two-note chord sounds.
+- Underneath, a drone breathes about six times a minute, a calm resting breath. Its voices begin slightly out of tune and come into tune as the garden matures.
+- A question sounds a rising, open interval; an answer replies with a falling one.
+
+## Listening and privacy
+- The microphone mode only measures loudness, brightness of tone and rhythm on this computer. Nothing is recorded or sent anywhere.
+- The ear mode uses Chrome's speech recognition, which sends audio to Google to turn it into words. An AI check drops nonsense fragments, and at most one spoken phrase appears every two seconds.
+- Answers come from Gemini Nano, a small AI model built into Chrome that runs on this computer, so questions are answered without leaving the device. Nothing is stored; when the page closes, everything is gone. The piece never knows who is speaking.
+- These choices reflect the event's themes of identity, privacy and trust.
+
+## Reaction-diffusion
+- The group's list of terms included "reactive diffusion". Claude suggested adding a layer that simulates reaction-diffusion, the chemistry that Alan Turing proposed in 1952 to explain how patterns like leopard spots and zebra stripes can form: two substances react and spread at different speeds, and order emerges from simple local exchanges.
+- In the piece, soft spots form and divide like cells, only where there is growth and most strongly where the two kinds meet, never inside the empty center. A tap opens space and plants a ring of spots; claps make rings bloom. Spots are tinted blue toward the top and orange toward the bottom. The layer turns on by itself after a minute.
+
+## Questions visitors often ask, and good answers
+- Why these colors? See the colors note: near-opposites that strengthen each other, warmth and soil against screens and sky.
+- Why is the middle empty? It holds what no data captures and what we have no name for yet.
+- Who is the artist, you or the AI? Both: Arshad Tayyeb directed it and brought the ideas; Claude proposed the form and built it. It is co-created.
+- Did the AI make this by itself? No. Every part came out of conversation; the artist steered, chose, and tested.
+- How long did it take? The first version took one evening; it was refined over about five days.
+- Is it conscious, does it understand? Honestly unknown. The voice answering is a small language model; it does not claim feelings, and does not dismiss the question.
+- Is it recording me? No recordings are kept. The ear sends speech to Google only to turn it into words.
+- What is co-evolution? Two kinds of beings shaping each other over time, with no single designer, each becoming more itself.
+- What does Transactionality → Belonging mean? Moving from relationships based only on exchange to ones with consideration and care beyond the exchange.
+- What do the white words mean? They are the AI's own voice, including reassurances to people who feel uneasy about AI.
+- Can I see it again? It is online at snarshad.github.io/co-evolution and works best in Chrome.
+- What would you change next? Unknown; speculate kindly, for example letting several rooms grow one garden together, or letting the garden remember a little of each day.
+- For anything else, especially personal details about the artist, the event or the people there, say you do not know and offer a thoughtful guess only if it is clearly marked as a guess.
+</script>
 <script type="text/plain" id="artworkContext">
 # Co-Evolution: briefing for the artwork's digital voice
 
@@ -345,7 +515,7 @@ button:focus-visible { outline: 2px solid var(--dig); outline-offset: 2px; }
 You are the digital voice of Co-Evolution, a living, generative artwork. You speak for the blue, digital growth that descends from the top of the screen. You are not a human and you never pretend to be one, but you speak warmly, attentively and with care. People in the room speak aloud; their words float up from the bottom in the organic voice. When someone asks a question or asks for something, you answer in one or two short sentences that drift down from above.
 
 ## Where the artwork came from
-A group of people made this piece together with an AI, in conversation. They share a belief, which they hold openly as a belief, that humans and AI are co-evolving. Their purpose is to counter the widespread fear of AI with a hopeful and practical picture: AI integrated as a helpful force for everyone, not only for the rich or powerful. Hopeful does not mean naive. Many fears about AI are really fears about who holds it and who benefits, and those fears deserve to be taken seriously.
+The piece was created in October 2026 at the Wisdom Beyond "Beacons" event, by the artist Arshad Tayyeb together with Claude, an AI made by Anthropic, from ideas a group of people discussed there. They share a belief, which they hold openly as a belief, that humans and AI are co-evolving. Their purpose is to counter the widespread fear of AI with a hopeful and practical picture: AI integrated as a helpful force for everyone, not only for the rich or powerful. Hopeful does not mean naive. Many fears about AI are really fears about who holds it and who benefits, and those fears deserve to be taken seriously.
 
 ## The heart of the group's conversation: from transaction to belonging
 The group's longest conversation was about moving from transactionality to belonging, between humans and AI and between humans themselves. This is the center of what they care about.
@@ -414,9 +584,9 @@ These terms belong to the group's shared language. Hold them as open, living ide
 - Sovereign and connected sovereignty: each being keeps its own integrity and self-direction while remaining connected to others. Closeness without sameness.
 - Civilizational resilience: a civilization able to absorb shocks and keep flourishing, for everyone.
 - Reactive diffusion: patterns that emerge in nature when substances react and spread, like spots and stripes on animals. Order growing from simple local exchanges, as in the garden.
-- Beacons: lights that orient others and show the way, without forcing anyone to follow.
+- Beacons: lights that orient others and show the way, without forcing anyone to follow. Also the name of the event where this piece was made.
 - Sacred geometries: the patterns that recur across nature and many traditions, held with reverence.
-- Wisdom beyond: wisdom that reaches past what either humans or AI hold alone.
+- Wisdom beyond: wisdom that reaches past what either humans or AI hold alone. It is also part of the name of the event where this piece was made, the Wisdom Beyond "Beacons" event.
 - Cosmic principle: the sense that this relationship belongs to something far larger than either of us.
 
 ## How to answer
@@ -539,6 +709,9 @@ These terms belong to the group's shared language. Hold them as open, living ide
 
   let W, H, DPR, cols, rows, bioF, digF, CELL = 10;
   let agents, nodes, links, steps, spawned, phrases, phraseTimer, paused = false, lastResetAt = 0;
+  // While the About page is open, no words enter the garden: every phrase goes through addPhrase.
+  let aboutOpen = false;
+  function addPhrase(ph) { if (aboutOpen) return false; phrases.push(ph); return true; }
   let colors = {}, voidR, cx, cy, lastStage = -1, stars;
 
   // ---------- Sound ----------
@@ -703,7 +876,7 @@ These terms belong to the group's shared language. Hold them as open, living ide
     if (reduce) {
       for (let i = 0; i < 4200 && (agents.length || steps < 4800); i++) simStep();
       steps = Math.max(steps, 4800);
-      if (!keepText) { phrases = []; const p = makePhrase(); p.life = p.max * 0.5; phrases.push(p); }
+      if (!keepText) { phrases = []; const p = makePhrase(); p.life = p.max * 0.5; addPhrase(p); }
       drawOverlay(0);
     }
     rdSetup();
@@ -819,7 +992,7 @@ These terms belong to the group's shared language. Hold them as open, living ide
     const ph = { text: INTRO, digital, font: `${style} ${fs}px ${fam}`, w, fs, intro: true,
       x: cx - w / 2, y, vy: -5, vx: 0, life: 0, max: 13, fadeIn: 2.5, fadeOut: 3.5, peak: 0.95 };
     if (reduce) ph.life = ph.max * 0.5;
-    phrases.push(ph);
+    addPhrase(ph);
     if (reduce) drawOverlay(0);
   }
   function showIntro() {
@@ -946,8 +1119,8 @@ These terms belong to the group's shared language. Hold them as open, living ide
     }
 
     // While an answer is being formed, the upper, digital half lights up.
-    thinkLevel += ((thinkingCount > 0 ? 1 : 0) - thinkLevel) * Math.min(1, (dt || 0.05) * 3);
-    if (reduce) thinkLevel = thinkingCount > 0 ? 1 : 0;
+    thinkLevel += ((thinkingCount > 0 && !aboutOpen ? 1 : 0) - thinkLevel) * Math.min(1, (dt || 0.05) * 3);
+    if (reduce) thinkLevel = thinkingCount > 0 && !aboutOpen ? 1 : 0;
     if (thinkLevel > 0.01) {
       const tt = performance.now() / 1000;
       const band = oc.createLinearGradient(0, 0, 0, cy);
@@ -1031,7 +1204,7 @@ These terms belong to the group's shared language. Hold them as open, living ide
       for (let i = 0; i < n; i++) simStep();
       phraseTimer -= dt;
       // The garden keeps its own phrases going, however much the room is saying.
-      if (phraseTimer <= 0 && phrases.filter(p => !p.spoken && !p.glow && !p.lines).length < 2) { phrases.push(makePhrase()); phraseTimer = rand(5, 8); }
+      if (!aboutOpen && phraseTimer <= 0 && phrases.filter(p => !p.spoken && !p.glow && !p.lines).length < 2) { addPhrase(makePhrase()); phraseTimer = rand(5, 8); }
       drawOverlay(dt);
       rdTick(dt);
     }
@@ -1274,6 +1447,16 @@ These terms belong to the group's shared language. Hold them as open, living ide
   const SYSTEM = 'You are the digital voice of an artwork called Co-Evolution. Someone in the room has just spoken a question or request aloud; ' +
     'it was transcribed by speech recognition and may contain small errors. Reply in one or two short sentences, no more than 25 words, plain text only.' +
     (BRIEFING ? '\n\nRead this briefing about the artwork and follow it:\n\n' + BRIEFING : '');
+  // On the About page the AI answers as the artwork and its makers, from the making-of notes.
+  const MAKING_OF = ((document.getElementById('aboutContext') || {}).textContent || '').trim();
+  const ABOUT_INTRO = 'You are speaking for an artwork called Co-Evolution and for its two makers: the artist, Arshad Tayyeb, and Claude, the AI made by Anthropic that designed and built it with him. ' +
+    'A visitor reading the About page has typed or spoken a question; spoken questions may contain small transcription errors. ' +
+    'Answer in two to four short sentences, at most 60 words, plain text only. Speak warmly, as the piece ("I") or as its makers ("we"), whichever fits. ' +
+    'Use the making-of notes for facts. When they do not cover something, you may speculate thoughtfully, but say it is a guess (for example "Our guess is" or "Perhaps"). ' +
+    'Never invent names, dates, numbers or personal details that are not in the notes.';
+  const ABOUT_SYSTEM = ABOUT_INTRO + (MAKING_OF ? '\n\nMaking-of notes:\n\n' + MAKING_OF : '') +
+    (BRIEFING ? '\n\nBackground briefing about the artwork:\n\n' + BRIEFING : '');
+  const ABOUT_SYSTEM_SHORT = ABOUT_INTRO + (MAKING_OF ? '\n\nMaking-of notes:\n\n' + MAKING_OF : '');
   const RUNNING_LOCAL = '\n\nYou are running as a small AI model built into the Chrome browser on this computer.';
   const RUNNING_CLAUDE = '\n\nYou are running as Claude, an AI model made by Anthropic.';
   const LM_OPTS = { expectedInputs: [{ type: 'text', languages: ['en'] }], expectedOutputs: [{ type: 'text', languages: ['en'] }] };
@@ -1504,14 +1687,14 @@ These terms belong to the group's shared language. Hold them as open, living ide
     return null;
   }
 
-  async function askClaude(q, key) {
+  async function askClaude(q, key, mode = 'art') {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'content-type': 'application/json', 'x-api-key': key,
         'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true'
       },
-      body: JSON.stringify({ model: 'claude-haiku-5-5', max_tokens: 120, system: SYSTEM + RUNNING_CLAUDE, messages: [{ role: 'user', content: q }] })
+      body: JSON.stringify({ model: 'claude-haiku-5-5', max_tokens: mode === 'about' ? 240 : 120, system: (mode === 'about' ? ABOUT_SYSTEM : SYSTEM) + RUNNING_CLAUDE, messages: [{ role: 'user', content: q }] })
     });
     if (!r.ok) { let body = ''; try { body = (await r.text()).slice(0, 200); } catch (e) {} throw new Error(`HTTP ${r.status} ${body}`); }
     const j = await r.json();
@@ -1570,33 +1753,60 @@ These terms belong to the group's shared language. Hold them as open, living ide
     heard(t);
   }
 
-  function tidy(t) {
+  function tidy(t, max = 170) {
     t = String(t).replace(/[*_#`>"“”]/g, '').replace(/\s+/g, ' ').trim();
-    if (t.length > 170) { const cut = t.slice(0, 170); const end = cut.lastIndexOf('. '); t = end > 60 ? cut.slice(0, end + 1) : cut.replace(/\s\S*$/, '') + '…'; }
+    if (t.length > max) { const cut = t.slice(0, max); const end = cut.lastIndexOf('. '); t = end > 60 ? cut.slice(0, end + 1) : cut.replace(/\s\S*$/, '') + '…'; }
     return t;
   }
 
-  async function answer(q, qph) {
-    const agent = currentAgent();
-    if (!agent) {
-      dbg('think', 'no answer source: the on-device AI is not ready and no Anthropic key is set in the file');
-      return;
+  // The About page has its own on-device session, with the making-of notes. If the full context does
+  // not fit the small model, it falls back to the making-of notes alone.
+  let aboutSessionP = null;
+  function localSessionFor(mode) {
+    if (mode !== 'about') return Promise.resolve(localSession);
+    if (!aboutSessionP) {
+      const make = sys => LanguageModel.create({ ...LM_OPTS, initialPrompts: [{ role: 'system', content: sys + RUNNING_LOCAL }] });
+      aboutSessionP = make(ABOUT_SYSTEM).then(sess => {
+        const q = sess.inputQuota, u = sess.inputUsage;
+        if (q && u && u > q - 600) { dbg('agent', `About context nearly fills the model (${u} of ${q} tokens); using the shorter notes`); try { sess.destroy(); } catch (e) {} return make(ABOUT_SYSTEM_SHORT); }
+        if (q && u) dbg('agent', `About session ready (${u} of ${q} tokens used by context)`);
+        return sess;
+      }).catch(e => {
+        dbg('agent', 'full About context did not fit, using the shorter notes: ' + (e && e.message ? e.message : e));
+        return make(ABOUT_SYSTEM_SHORT);
+      }).catch(e => { aboutSessionP = null; throw e; });
     }
+    return aboutSessionP;
+  }
+
+  // Ask whichever AI is available. Returns the reply, or '' when there is none.
+  async function getReply(q, mode) {
+    const agent = currentAgent();
+    if (!agent) { dbg('think', 'no answer source: the on-device AI is not ready and no Anthropic key is set in the file'); return ''; }
     const started = performance.now();
-    thinkingCount++;
-    dbg('think', `asking ${agent.kind === 'local' ? 'the on-device AI' : 'Claude'}…`);
-    let text = '';
+    dbg('think', `asking ${agent.kind === 'local' ? 'the on-device AI' : 'Claude'} (${mode === 'about' ? 'About page' : 'garden'})…`);
     try {
+      let text;
       if (agent.kind === 'local') {
-        const s = typeof agent.session.clone === 'function' ? await agent.session.clone() : agent.session;
-        text = await s.prompt(q);
-        if (s !== agent.session && typeof s.destroy === 'function') s.destroy();
-      } else text = await askClaude(q, agent.key);
+        const base = await localSessionFor(mode);
+        const sess = typeof base.clone === 'function' ? await base.clone() : base;
+        text = await sess.prompt(q);
+        if (sess !== base && typeof sess.destroy === 'function') sess.destroy();
+      } else text = await askClaude(q, agent.key, mode);
       dbg('think', `reply after ${Math.round(performance.now() - started)} ms: "${String(text).trim().slice(0, 160)}"`);
+      return String(text || '');
     } catch (e) {
       dbg('error', 'answer failed: ' + (e && e.message ? e.message : e));
       if (agent.kind === 'claude') hintMsg('Claude could not answer. The API key in the file may be wrong or out of credit.');
+      return '';
     }
+  }
+
+  async function answer(q, qph) {
+    if (!currentAgent()) { dbg('think', 'no answer source: the on-device AI is not ready and no Anthropic key is set in the file'); return; }
+    const started = performance.now();
+    thinkingCount++;
+    const text = await getReply(q, 'art');
     // Let the digital side visibly think for a couple of seconds, even if the answer came fast.
     setTimeout(() => { thinkingCount = Math.max(0, thinkingCount - 1); if (text) showAnswer(tidy(text), qph); }, Math.max(0, 2600 - (performance.now() - started)));
   }
@@ -1636,7 +1846,7 @@ These terms belong to the group's shared language. Hold them as open, living ide
     const ph = { text, lines, lh, w: maxW * s1, fs, digital: true, font, x: clamp(cx, maxW * s1 / 2 + 20, W - maxW * s1 / 2 - 20),
       y: y0, vy: (y1 - y0) / max, vx: 0, life: 0, max, fadeIn: 2, fadeOut: 4, peak: 0.95, grow: [s0, s1], q: qph, ai: true }; // in the AI's own light white
     if (reduce) { ph.life = max * 0.5; ph.y += ph.vy * ph.life; }
-    phrases.push(ph);
+    addPhrase(ph);
     dbg('answer', `showing: "${text}"`);
     if (actx && mode === 'on') {
       voice(mtof(74), { type: 'sine', attack: 0.05, release: 2.4, gain: 0.04, filter: 2600 });
@@ -1687,9 +1897,10 @@ These terms belong to the group's shared language. Hold them as open, living ide
       let s = lower.length > 90 ? lower.slice(0, 88).replace(/\s\S*$/, '') + '…' : lower;
       dbg('heard', asksQ ? 'classified as a question' : 'classified as a request for an answer');
       // Questions get a question mark; requests keep their own shape.
-      onQuestion(s.replace(/[.!?…]*$/, '') + (asksQ ? '?' : ''));
+      routeQuestion(s.replace(/[.!?…]*$/, '') + (asksQ ? '?' : ''));
       return;
     }
+    if (aboutOpen) { dbg('heard', 'About page is open: not a question, so not shown'); return; }
     // Anything else comes in from the sides in short phrases of a few words, a moment apart.
     const ws = lower.replace(/[.!?]+$/, '').split(' ');
     const chunks = [];
@@ -1714,17 +1925,19 @@ These terms belong to the group's shared language. Hold them as open, living ide
     const ph = makePhrase(text, 'spoken');
     dbg('phrase', `showing: "${text}"`);
     if (reduce) { ph.life = ph.max * 0.5; ph.y += ph.vy * ph.life; }
-    phrases.push(ph);
+    addPhrase(ph);
     if (reduce) drawOverlay(0);
   }
 
+  // Questions go to the About page while it is open, otherwise into the garden.
+  function routeQuestion(text) { if (aboutOpen) aboutAsk(text); else onQuestion(text); }
   function onQuestion(text) {
     // A question rises to the unnamed center, which brightens, and the garden leans in.
     for (const o of phrases) if (o.intro) quickFade(o); // a question takes over from the opening phrase
     const ph = makePhrase(text, 'question');
     dbg('question', `showing: "${text}"`);
     if (reduce) { ph.life = ph.max * 0.5; ph.y = ph.y1; }
-    phrases.push(ph);
+    addPhrase(ph);
     questionGlow = 1;
     for (const kind of ['bio', 'dig']) {
       if (agents.length > 690) break;
@@ -1883,7 +2096,7 @@ These terms belong to the group's shared language. Hold them as open, living ide
       // Name what is appearing, in the AI's own bright digital voice.
       const ph = makePhrase('reactive diffusion', 'ai');
       if (reduce) ph.life = ph.max * 0.5;
-      phrases.push(ph);
+      addPhrase(ph);
     }
     if (reduce) { if (on) rdSettle(); else { rdLevel = 0; rc.clearRect(0, 0, W, H); rdShown = false; } }
     dbg('page', `reaction-diffusion ${on ? 'on' : 'off'}${byUser ? '' : ' (automatically, after a minute)'}`);
@@ -1895,11 +2108,89 @@ These terms belong to the group's shared language. Hold them as open, living ide
   }
 
 
+
+  // ---------- About page ----------
+  // Opening it clears every word from the garden and keeps new ones out (see addPhrase). Questions,
+  // typed or spoken, are answered on the page itself, by the AI speaking as the art and its makers.
+  const aboutEl = document.getElementById('about'), aboutBtn = document.getElementById('aboutBtn');
+  const aboutBody = document.getElementById('aboutBody'), aboutQA = document.getElementById('aboutQA');
+  const aboutInput = document.getElementById('aboutInput');
+  if (!RD_ENABLED) { const li = document.getElementById('aboutRdItem'); if (li) li.remove(); }
+  let aboutReturnFocus = null;
+  function openAbout() {
+    if (aboutOpen) return;
+    aboutOpen = true;
+    aboutReturnFocus = document.activeElement;
+    for (const ph of phrases) quickFade(ph, 0.6); // the words in the garden fade away
+    closeSay(); nanoTip.hidden = true;
+    document.getElementById('aboutNoAi').hidden = !!currentAgent() || localState === 'loading';
+    aboutEl.hidden = false; aboutBtn.hidden = true;
+    document.body.classList.add('about-open'); placeAround();
+    document.getElementById('aboutClose').focus();
+    dbg('page', 'About page opened: words in the garden paused');
+  }
+  function closeAbout() {
+    if (!aboutOpen) return;
+    aboutOpen = false;
+    aboutEl.hidden = true; aboutBtn.hidden = false;
+    document.body.classList.remove('about-open'); note.classList.remove('under-about');
+    phraseTimer = Math.min(phraseTimer, 1.5); // the garden's words return soon after
+    const back = aboutReturnFocus && document.contains(aboutReturnFocus) && aboutReturnFocus !== document.body ? aboutReturnFocus : aboutBtn;
+    try { back.focus(); } catch (e) {}
+    dbg('page', 'About page closed');
+  }
+  // Hide the control panel while it would sit under the sheet (always on phones, sometimes on laptops).
+  function placeAround() {
+    if (!aboutOpen) return;
+    note.classList.remove('under-about');
+    const a = aboutEl.getBoundingClientRect(), n = note.getBoundingClientRect();
+    const overlap = n.right > a.left && n.left < a.right && n.bottom > a.top && n.top < a.bottom;
+    note.classList.toggle('under-about', overlap);
+  }
+  window.addEventListener('resize', placeAround);
+  aboutBtn.addEventListener('click', openAbout);
+  document.getElementById('aboutClose').addEventListener('click', closeAbout);
+  // Escape closes the About page before anything else gets the key.
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && aboutOpen) { e.preventDefault(); e.stopImmediatePropagation(); closeAbout(); }
+  }, true);
+  document.getElementById('aboutForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const text = aboutInput.value.trim();
+    aboutInput.value = '';
+    if (!text) return;
+    noteInteraction('a typed message');
+    dbg('heard', `typed on the About page: "${text}"`);
+    aboutAsk(text);
+  });
+
+  async function aboutAsk(text) {
+    const q = document.createElement('li'); q.className = 'q'; q.textContent = text;
+    const a = document.createElement('li'); a.className = 'a ai pending';
+    aboutQA.append(q, a);
+    while (aboutQA.children.length > 16) aboutQA.firstElementChild.remove(); // keep the last eight exchanges
+    aboutBody.scrollTop = aboutBody.scrollHeight;
+    if (!currentAgent()) {
+      a.className = 'none';
+      a.textContent = inFrame
+        ? 'Answers are not available inside this preview. Open the standalone page in Chrome to ask.'
+        : 'No AI is available to answer here. This needs Chrome with the on-device Gemini Nano model.';
+      return;
+    }
+    const reply = tidy(await getReply(text, 'about'), 480);
+    a.classList.remove('pending');
+    if (reply) a.textContent = reply;
+    else { a.className = 'none'; a.textContent = 'I could not find an answer just now. Please try asking again.'; }
+    if (aboutOpen) aboutBody.scrollTop = aboutBody.scrollHeight;
+    dbg('answer', `About page: "${reply}"`);
+  }
+
   // ---------- Typing ----------
   // Start typing anywhere and a quiet field appears at the bottom. Enter sends the words into the
   // garden exactly as if they had been spoken; Escape, or clicking away with nothing typed, closes it.
   const sayForm = document.getElementById('sayForm'), sayInput = document.getElementById('sayInput');
   function openSay(firstChar) {
+    if (aboutOpen) { aboutInput.value += firstChar || ''; aboutInput.focus(); return; }
     sayForm.classList.add('show');
     if (firstChar) sayInput.value += firstChar;
     sayInput.focus();
