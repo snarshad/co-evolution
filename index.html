@@ -190,12 +190,14 @@ button:focus-visible { outline: 2px solid var(--dig); outline-offset: 2px; }
   background: transparent; border: 1px solid var(--rule); border-radius: 2px; padding: 7px 8px;
 }
 .ask input:focus-visible { outline: 2px solid var(--dig); outline-offset: 1px; }
-.aistat { width: 7px; height: 7px; border-radius: 50%; flex: none; margin-inline: 3px; background: var(--muted); opacity: .45; }
-.aistat[data-state="loading"] { background: var(--warn); opacity: 1; animation: aipulse 1.2s ease-in-out infinite; }
-.aistat[data-state="ready"] { background: var(--ok); opacity: 1; }
-.aistat[data-state="error"] { background: var(--err); opacity: 1; }
+/* The dot stays 7px, but the element around it is a 22px hover target for its status tooltip. */
+.aistat { width: 22px; height: 22px; flex: none; margin-inline: -4px; display: grid; place-items: center; cursor: help; }
+.aistat::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); opacity: .45; }
+.aistat[data-state="loading"]::before { background: var(--warn); opacity: 1; animation: aipulse 1.2s ease-in-out infinite; }
+.aistat[data-state="ready"]::before { background: var(--ok); opacity: 1; }
+.aistat[data-state="error"]::before { background: var(--err); opacity: 1; }
 @keyframes aipulse { 50% { opacity: .35; } }
-@media (prefers-reduced-motion: reduce) { .aistat[data-state="loading"] { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .aistat[data-state="loading"]::before { animation: none; } }
 .mic[data-mode="on"] {
   border-color: var(--bio); color: var(--bio);
   box-shadow: 0 0 0 calc(var(--lvl, 0) * 6px) color-mix(in srgb, var(--bio) 30%, transparent);
