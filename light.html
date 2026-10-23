@@ -257,6 +257,7 @@ button:focus-visible { outline: 2px solid var(--dig); outline-offset: 2px; }
 /* While the About page is open, notices step aside, and the panel hides if it would sit under the sheet. */
 body.about-open .notice, body.about-open .mh, body.about-open .mh-btn, body.about-open .tip { visibility: hidden; }
 body.about-open .note.under-about { visibility: hidden; }
+body.about-open .note.over-about { z-index: 7; }
 .about-head .t-evo { font-family: var(--mono); font-weight: 800; font-size: .86em; color: var(--a-blue); }
 .about-x {
   /* A small button tucked into the sheet's top-right corner, apart from the title. */
@@ -2130,6 +2131,7 @@ These terms belong to the group's shared language. Hold them as open, living ide
     closeSay(); nanoTip.hidden = true;
     document.getElementById('aboutNoAi').hidden = !!currentAgent() || localState === 'loading';
     aboutEl.hidden = false; aboutBtn.hidden = true;
+    note.classList.add('collapsed'); // the panel folds to its tab rather than disappearing
     document.body.classList.add('about-open'); placeAround();
     document.getElementById('aboutClose').focus();
     dbg('page', 'About page opened: words in the garden paused');
@@ -2138,20 +2140,23 @@ These terms belong to the group's shared language. Hold them as open, living ide
     if (!aboutOpen) return;
     aboutOpen = false;
     aboutEl.hidden = true; aboutBtn.hidden = false;
-    document.body.classList.remove('about-open'); note.classList.remove('under-about');
+    document.body.classList.remove('about-open'); note.classList.remove('under-about', 'over-about');
     phraseTimer = Math.min(phraseTimer, 1.5); // the garden's words return soon after
     const back = aboutReturnFocus && document.contains(aboutReturnFocus) && aboutReturnFocus !== document.body ? aboutReturnFocus : aboutBtn;
     try { back.focus(); } catch (e) {}
     dbg('page', 'About page closed');
   }
-  // Hide the control panel while it would sit under the sheet (always on phones, sometimes on laptops).
+  // While About is open the panel stays up as its folded tab, drawn above the sheet's corner. Only when
+  // the tab would cover a large part of the sheet (phone widths) does it step aside.
   function placeAround() {
     if (!aboutOpen) return;
-    note.classList.remove('under-about');
+    note.classList.remove('under-about', 'over-about');
     const a = aboutEl.getBoundingClientRect(), n = note.getBoundingClientRect();
-    const overlap = n.right > a.left && n.left < a.right && n.bottom > a.top && n.top < a.bottom;
-    note.classList.toggle('under-about', overlap);
+    const ox = Math.min(n.right, a.right) - Math.max(n.left, a.left), oy = Math.min(n.bottom, a.bottom) - Math.max(n.top, a.top);
+    if (ox > 0 && oy > 0) note.classList.add(ox > 60 ? 'under-about' : 'over-about');
   }
+  // Opening the tab while About is up keeps it on top.
+  document.getElementById('mini').addEventListener('click', () => { if (aboutOpen) { note.classList.remove('under-about'); note.classList.add('over-about'); } });
   window.addEventListener('resize', placeAround);
   aboutBtn.addEventListener('click', openAbout);
   document.getElementById('aboutClose').addEventListener('click', closeAbout);
